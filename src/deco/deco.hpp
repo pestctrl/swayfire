@@ -2,11 +2,9 @@
 #define SWAYFIRE_DECO_HPP
 
 #include <utility>
-#include <wayfire/compositor-surface.hpp>
 #include <wayfire/decorator.hpp>
 #include <wayfire/option-wrapper.hpp>
 #include <wayfire/plugin.hpp>
-#include <wayfire/surface.hpp>
 
 #include "../core/core.hpp"
 #include "../core/plugin.hpp"
