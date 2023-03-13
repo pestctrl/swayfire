@@ -34,8 +34,8 @@ class SwayfirePlugin : public wf::per_output_plugin_instance_t {
 
     wf::signal::connection_t<SwayfireFinish> on_swayfire_fini = [&](SwayfireFinish *) {
         assert(!has_finished);
-        output->disconnect_signal(&on_swayfire_init);
-        output->disconnect_signal(&on_swayfire_fini);
+        output->disconnect(&on_swayfire_init);
+        output->disconnect(&on_swayfire_fini);
         swf_fini();
         has_finished = true;
     };
