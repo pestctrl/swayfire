@@ -1,5 +1,6 @@
 #ifndef SWAYFIRE_DECO_HPP
 #define SWAYFIRE_DECO_HPP
+#pragma once
 
 #include <utility>
 #include <wayfire/decorator.hpp>

@@ -1,10 +1,14 @@
 #ifndef SWAYFIRE_PLUGIN_HPP
 #define SWAYFIRE_PLUGIN_HPP
+#pragma once
 
 #include <wayfire/nonstd/observer_ptr.h>
 #include <wayfire/object.hpp>
 #include <wayfire/output.hpp>
+#ifndef WAYFIRE_PER_OUTPUT
+#define WAYFIRE_PER_OUTPUT
 #include <wayfire/per-output-plugin.hpp>
+#endif
 #include "signals.hpp"
 
 class Swayfire;

@@ -1,5 +1,6 @@
 #ifndef SWAYFIRE_CORE_HPP
 #define SWAYFIRE_CORE_HPP
+#pragma once
 
 #include <cassert>
 #include <cstdint>
@@ -16,7 +17,10 @@
 #include <wayfire/signal-provider.hpp>
 #include <wayfire/option-wrapper.hpp>
 #include <wayfire/output.hpp>
+#ifndef WAYFIRE_PER_OUTPUT
+#define WAYFIRE_PER_OUTPUT
 #include <wayfire/per-output-plugin.hpp>
+#endif
 #include <wayfire/signal-definitions.hpp>
 #include <wayfire/util/log.hpp>
 #include <wayfire/view-transform.hpp>
