@@ -1142,8 +1142,8 @@ class Swayfire final : public wf::per_output_plugin_instance_t {
         };
 
     /// Handle new created views.
-    wf::signal_connection_t on_view_attached = [&](wf::signal_data_t *data) {
-        auto view = wf::get_signaled_view(data);
+    wf::signal::connection_t<wf::view_layer_attached_signal> on_view_attached = [&](wf::view_layer_attached_signal *ev) {
+        auto view = ev->view;
 
         if (view->role != wf::VIEW_ROLE_TOPLEVEL || view->parent)
             return;
