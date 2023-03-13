@@ -409,8 +409,7 @@ class INode : public virtual IDisplay, public wf::object_base_t, public wf::sign
     };
 
     /// Set the sublayer of views in the subtree starting at this node.
-    // TODO(pestctrl): wf::sublayer_t is gone?
-    virtual void set_sublayer(nonstd::observer_ptr<wf::sublayer_t> sublayer);
+    virtual void set_sublayer(nonstd::observer_ptr<wf::scene::floating_inner_ptr> sublayer);
 
     /// Bring this node's whole tree to the foreground.
     virtual void bring_to_front();
@@ -584,7 +583,7 @@ class ViewNode final : public INode {
     std::string get_title() override;
     void set_geometry(wf::geometry_t geo) override;
     void set_floating(bool fl) override;
-    void set_sublayer(nonstd::observer_ptr<wf::sublayer_t> sublayer) override;
+    void set_sublayer(nonstd::observer_ptr<wf::scene::floating_inner_ptr> sublayer) override;
     void bring_to_front() override;
     void on_set_active() override;
     NodeParent get_or_upgrade_to_parent_node() override;
@@ -772,7 +771,7 @@ class SplitNode final : public INode, public INodeParent {
     void set_geometry(wf::geometry_t geo) override;
     void begin_resize() override;
     void end_resize() override;
-    void set_sublayer(nonstd::observer_ptr<wf::sublayer_t> sublayer) override;
+    void set_sublayer(nonstd::observer_ptr<wf::scene::floating_inner_ptr> sublayer) override;
     void bring_to_front() override;
     void set_ws(WorkspaceRef ws) override;
     NodeParent get_or_upgrade_to_parent_node() override;
@@ -795,7 +794,7 @@ class Workspace final : public INodeParent {
         std::unique_ptr<N> node;
 
         /// The sublayer which holds all nodes in under this root.
-        nonstd::observer_ptr<wf::sublayer_t> sublayer;
+        nonstd::observer_ptr<wf::scene::floating_inner_ptr> sublayer;
     };
 
   public:
@@ -812,7 +811,7 @@ class Workspace final : public INodeParent {
     WorkspaceRoot<SplitNode> tiled_root;
 
     /// The sublayer which holds all floating nodes in this workspace.
-    nonstd::observer_ptr<wf::sublayer_t> floating_sublayer;
+    nonstd::observer_ptr<wf::scene::floating_inner_ptr> floating_sublayer;
 
     /// The floating nodes that are manages by this ws.
     ///
@@ -869,7 +868,7 @@ class Workspace final : public INodeParent {
     wf::geometry_t get_workarea() { return workarea; }
 
     /// Get the sublayer of the direct child of this workspace.
-    nonstd::observer_ptr<wf::sublayer_t> get_child_sublayer(Node child);
+    nonstd::observer_ptr<wf::scene::floating_inner_ptr> get_child_sublayer(Node child);
 
     // == Floating ==
 

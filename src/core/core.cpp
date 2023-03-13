@@ -2,6 +2,7 @@
 #include "../nonstd.hpp"
 #include "grab.hpp"
 #include "plugin.hpp"
+#include <wayfire/scene-operations.hpp>
 
 // nonwf
 
@@ -108,7 +109,9 @@ void INode::add_subsurface(wayfire_view subsurf) {
     assert(sublayer);
     subsurf->set_output(ws->output.get());
     subsurf->set_role(wf::VIEW_ROLE_DESKTOP_ENVIRONMENT);
-    ws->output->workspace->add_view_to_sublayer(subsurf, sublayer);
+
+    wf::scene::remove_child(subsurf->get_root_node());
+    wf::scene::add_front(*sublayer, subsurf->get_root_node());
 
     subsurfaces.push_back(subsurf);
 }
@@ -129,12 +132,14 @@ void INode::set_floating(bool fl) {
     floating = fl;
 };
 
-void INode::set_sublayer(nonstd::observer_ptr<wf::sublayer_t> sublayer) {
+void INode::set_sublayer(nonstd::observer_ptr<wf::scene::floating_inner_ptr> sublayer) {
     assert(sublayer.get() != nullptr);
 
     const auto &workspace = get_ws()->output->workspace;
-    for (auto &subsurf : subsurfaces)
-        workspace->add_view_to_sublayer(subsurf, sublayer);
+    for (auto &subsurf : subsurfaces) {
+        wf::scene::remove_child(subsurf->get_root_node());
+        wf::scene::add_front(*sublayer, subsurf->get_root_node());
+    }
 }
 
 void INode::bring_to_front() {
@@ -378,7 +383,7 @@ void ViewNode::set_prefered_split_type(std::optional<SplitType> split_type) {
     }
 }
 
-void ViewNode::set_sublayer(nonstd::observer_ptr<wf::sublayer_t> sublayer) {
+void ViewNode::set_sublayer(nonstd::observer_ptr<wf::scene::floating_inner_ptr> sublayer) {
     INode::set_sublayer(sublayer);
     get_ws()->output->workspace->add_view_to_sublayer(view, sublayer);
 }
@@ -891,7 +896,7 @@ bool SplitNode::move_child(Node node, Direction dir) {
 #undef MOVE_BACK
 }
 
-void SplitNode::set_sublayer(nonstd::observer_ptr<wf::sublayer_t> sublayer) {
+void SplitNode::set_sublayer(nonstd::observer_ptr<wf::scene::floating_inner_ptr> sublayer) {
     INode::set_sublayer(sublayer);
     for (auto &child : children)
         child.node->set_sublayer(sublayer);
@@ -1333,7 +1338,7 @@ void Workspace::set_workarea(wf::geometry_t geo) {
     }
 }
 
-nonstd::observer_ptr<wf::sublayer_t> Workspace::get_child_sublayer(Node node) {
+nonstd::observer_ptr<wf::scene::floating_inner_ptr> Workspace::get_child_sublayer(Node node) {
     if (node.get() == tiled_root.node.get())
         return tiled_root.sublayer;
 
