@@ -259,7 +259,6 @@ struct Padding {
 };
 
 /// Interface for common functionality of nodes.
-// TODO(pestctrl): Make inherit from signal::provider_t
 class INode : public virtual IDisplay, public wf::object_base_t, public wf::signal::provider_t {
   protected:
     /// Whether this node is floating.
