@@ -1033,11 +1033,11 @@ Workspace::Workspace(wf::point_t wsid, wf::geometry_t geo,
     floating_sublayer = output->workspace->create_sublayer(
         wf::LAYER_WORKSPACE, wf::SUBLAYER_DOCKED_ABOVE);
 
-    output->connect_signal("workarea-changed", &on_workarea_changed);
+    output->connect(&on_workarea_changed);
 }
 
 Workspace::~Workspace() {
-    output->disconnect_signal(&on_workarea_changed);
+    output->disconnect(&on_workarea_changed);
     output->workspace->destroy_sublayer(tiled_root.sublayer);
     output->workspace->destroy_sublayer(floating_sublayer);
 }
@@ -1537,22 +1537,21 @@ void Swayfire::correct_view_workspace(ViewNodeRef node,
 
 void Swayfire::bind_signals() {
     output->connect(&on_view_focused);
-    output->connect_signal("view-fullscreen-request",
-                           &on_view_fullscreen_request);
-    output->connect_signal("view-tile-request", &on_view_tile_request);
+    output->connect(&on_view_fullscreen_request);
+    output->connect(&on_view_tile_request);
     output->connect(&on_view_attached);
     output->connect(&on_view_minimized);
-    output->connect_signal("view-change-workspace", &on_view_change_workspace);
-    output->connect_signal("workspace-changed", &on_workspace_changed);
+    output->connect(&on_view_change_workspace);
+    output->connect(&on_workspace_changed);
 }
 
 void Swayfire::unbind_signals() {
-    output->disconnect_signal(&on_workspace_changed);
-    output->disconnect_signal(&on_view_change_workspace);
+    output->disconnect(&on_workspace_changed);
+    output->disconnect(&on_view_change_workspace);
     output->disconnect(&on_view_minimized);
     output->disconnect(&on_view_attached);
-    output->disconnect_signal(&on_view_tile_request);
-    output->disconnect_signal(&on_view_fullscreen_request);
+    output->disconnect(&on_view_tile_request);
+    output->disconnect(&on_view_fullscreen_request);
     output->disconnect(&on_view_focused);
 }
 

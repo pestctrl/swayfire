@@ -839,9 +839,8 @@ class Workspace final : public INodeParent {
     FloatingNodeIter find_floating(Node node);
 
     /// Handle workarea changes.
-    wf::signal_connection_t on_workarea_changed = [&](wf::signal_data_t *data) {
-        auto wcdata = static_cast<wf::workarea_changed_signal *>(data);
-        set_workarea(wcdata->new_workarea);
+    wf::signal::connection_t<wf::workarea_changed_signal> on_workarea_changed = [&](wf::workarea_changed_signal *data) {
+        set_workarea(data->new_workarea);
     };
 
     /// Reset the active node to the next valid node in the ws
@@ -1098,11 +1097,8 @@ class Swayfire final : public wf::per_output_plugin_instance_t {
     };
 
     /// Handle view fullscreen requests
-    wf::signal_connection_t on_view_fullscreen_request =
-        [&](wf::signal_data_t *data) {
-            auto fr_data =
-                static_cast<wf::view_fullscreen_request_signal *>(data);
-
+    wf::signal::connection_t<wf::view_fullscreen_request_signal> on_view_fullscreen_request =
+        [&](wf::view_fullscreen_request_signal *fr_data) {
             if (const auto node = get_view_node(fr_data->view)) {
                 assert(!fr_data->carried_out);
                 fr_data->carried_out = true;
@@ -1132,10 +1128,8 @@ class Swayfire final : public wf::per_output_plugin_instance_t {
         };
 
     /// Handle view tile requests
-    wf::signal_connection_t on_view_tile_request =
-        [&](wf::signal_data_t *data) {
-            auto tr_data = static_cast<wf::view_tile_request_signal *>(data);
-
+    wf::signal::connection_t<wf::view_tile_request_signal> on_view_tile_request =
+        [&](wf::view_tile_request_signal *tr_data) {
             if (const auto node = get_view_node(tr_data->view)) {
                 assert(!tr_data->carried_out);
                 tr_data->carried_out = true;
@@ -1177,10 +1171,8 @@ class Swayfire final : public wf::per_output_plugin_instance_t {
     };
 
     /// Handle views changing workspace.
-    wf::signal_connection_t on_view_change_workspace =
-        [&](wf::signal_data_t *data_) {
-            const auto data =
-                dynamic_cast<wf::view_change_workspace_signal *>(data_);
+    wf::signal::connection_t<wf::view_change_workspace_signal> on_view_change_workspace =
+        [&](wf::view_change_workspace_signal *data) {
             if (const auto view_node = get_view_node(data->view)) {
                 if (const auto floating = view_node->find_floating_parent()) {
                     // NOTE: We don't do anything if we are part of a floating
@@ -1201,10 +1193,8 @@ class Swayfire final : public wf::per_output_plugin_instance_t {
         };
 
     /// Handle active workspace changing.
-    wf::signal_connection_t on_workspace_changed =
-        [&](wf::signal_data_t *data_) {
-            const auto data =
-                dynamic_cast<wf::workspace_changed_signal *>(data_);
+    wf::signal::connection_t<wf::workspace_changed_signal> on_workspace_changed =
+        [&](wf::workspace_changed_signal *data) {
             const auto views = output->workspace->get_views_on_workspace(
                 data->new_viewport, wf::LAYER_WORKSPACE);
 
