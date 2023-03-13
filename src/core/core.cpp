@@ -319,7 +319,7 @@ void ViewNode::on_initialized() {
 
     ViewNodeSignalData data = {};
     data.node = this;
-    ws->output->emit_signal("swf-view-node-attached", &data);
+    ws->output->emit(&data);
 }
 
 std::string ViewNode::get_title() { return view->get_title(); }
@@ -919,7 +919,7 @@ void SplitNode::set_ws(WorkspaceRef ws) {
 void SplitNode::on_initialized() {
     SplitNodeSignalData data = {};
     data.node = this;
-    ws->output->emit_signal("swf-split-node-attached", &data);
+    ws->output->emit(&data);
 }
 
 std::string SplitNode::get_title() {

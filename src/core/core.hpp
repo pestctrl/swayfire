@@ -609,8 +609,6 @@ inline ViewNodeRef get_view_node(wayfire_view view) {
 ///
 /// \return The ViewNode of the signaled view or nullptr.
 inline ViewNodeRef get_signaled_view_node(wf::signal_data_t *data) {
-    if (auto ndata = dynamic_cast<ViewNodeSignalData *>(data))
-        return ndata->node;
     return get_view_node(wf::get_signaled_view(data));
 }
 

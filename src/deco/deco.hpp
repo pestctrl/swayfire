@@ -520,10 +520,9 @@ class SwayfireDeco final : public SwayfirePlugin {
     /// Add decorations to the node.
     void decorate_node(Node node);
 
-    wf::signal_connection_t on_view_node_attached =
-        [&](wf::signal_data_t *data) {
-            auto vnode = get_signaled_view_node(data);
-            decorate_node(vnode);
+    wf::signal::connection_t<ViewNodeSignalData> on_view_node_attached =
+        [&](ViewNodeSignalData *data) {
+            decorate_node(data->node);
         };
 
 	wf::signal::connection_t<SplitNodeSignalData> on_split_node_created =
