@@ -460,7 +460,7 @@ class ViewGeoEnforcer final : public wf::view_2D {
     uint disabled = 0;
 
     /// Handle the view changing geometry.
-    wf::signal_connection_t on_geometry_changed = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<GeometryChangedSignalData> on_geometry_changed = [&](GeometryChangedSignalData *) {
         update_transformer();
     };
 
@@ -503,7 +503,7 @@ class ViewNode final : public INode {
     };
 
     /// Handle geometry changes.
-    wf::signal_connection_t on_geometry_changed = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<GeometryChangedSignalData> on_geometry_changed = [&](GeometryChangedSignalData *) {
         on_geometry_changed_impl();
     };
 

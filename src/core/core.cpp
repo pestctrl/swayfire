@@ -332,7 +332,7 @@ void ViewNode::set_geometry(wf::geometry_t geo) {
     GeometryChangedSignalData data;
     data.old_geo = old_geo;
     data.new_geo = geometry;
-    emit_signal("geometry-changed", &data);
+    emit(&data);
 
     auto inner = get_inner_geometry();
 
@@ -962,7 +962,7 @@ void SplitNode::set_geometry(const wf::geometry_t geo) {
     GeometryChangedSignalData data;
     data.old_geo = old_geo;
     data.new_geo = geometry;
-    emit_signal("geometry-changed", &data);
+    emit(&data);
 
     auto inner = get_inner_geometry();
 

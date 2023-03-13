@@ -347,12 +347,9 @@ class SplitDecoration final : public wf::view_interface_t,
         cache_textures();
     };
 
-    wf::signal_connection_t on_geometry_changed =
-        [&](wf::signal_data_t *data_) {
+    wf::signal::connection_t<GeometryChangedSignalData> on_geometry_changed =
+        [&](GeometryChangedSignalData *data) {
             {
-                const auto data =
-                    dynamic_cast<GeometryChangedSignalData *>(data_);
-
                 const bool needs_geo_refresh =
                     !geometry.width || !geometry.height;
 
@@ -442,9 +439,9 @@ class SplitDecoration final : public wf::view_interface_t,
         for (std::size_t i = 0; i < node->get_children_count(); i++)
             tab_surfaces.emplace_back();
 
-        node->connect_signal("geometry-changed", &on_geometry_changed);
         node->connect_signal("padding-changed", &on_padding_changed);
         node->connect_signal("split-type-changed", &on_split_type_changed);
+        node->connect(&on_geometry_changed);
         node->connect(&on_child_inserted);
         node->connect(&on_child_swapped);
         node->connect(&on_children_swapped);
@@ -472,11 +469,11 @@ class SplitDecoration final : public wf::view_interface_t,
 
         node->disconnect_signal(&on_split_type_changed);
         node->disconnect_signal(&on_padding_changed);
-        node->disconnect_signal(&on_geometry_changed);
         node->disconnect(&on_child_removed);
         node->disconnect(&on_children_swapped);
         node->disconnect(&on_child_swapped);
         node->disconnect(&on_child_inserted);
+        node->disconnect(&on_geometry_changed);
     }
 
     [[nodiscard]] Padding get_current_padding() const {
