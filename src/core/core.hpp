@@ -13,6 +13,7 @@
 #include <wayfire/geometry.hpp>
 #include <wayfire/nonstd/observer_ptr.h>
 #include <wayfire/object.hpp>
+#include <wayfire/signal-provider.hpp>
 #include <wayfire/option-wrapper.hpp>
 #include <wayfire/output.hpp>
 #include <wayfire/plugin.hpp>
@@ -254,7 +255,8 @@ struct Padding {
 };
 
 /// Interface for common functionality of nodes.
-class INode : public virtual IDisplay, public wf::object_base_t {
+// TODO(pestctrl): Make inherit from signal::provider_t
+class INode : public virtual IDisplay, public wf::object_base_t, public wf::signal::provider_t {
   protected:
     /// Whether this node is floating.
     ///
