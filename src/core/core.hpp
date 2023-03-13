@@ -457,8 +457,7 @@ class INode : public virtual IDisplay, public wf::object_base_t, public wf::sign
 ///
 /// Currently waiting on https://github.com/WayfireWM/wayfire/issues/995 which
 /// is planned for wayfire 0.9.
-// TODO(pestctrl): view_2D is gone
-class ViewGeoEnforcer final : public wf::view_2D {
+class ViewGeoEnforcer final : public wf::scene::view_2d_transformer_t {
   private:
     ViewNodeRef view_node;
 

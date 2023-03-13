@@ -197,7 +197,7 @@ Node INode::find_floating_parent() {
 // ViewGeoEnforcer
 
 ViewGeoEnforcer::ViewGeoEnforcer(ViewNodeRef node)
-    : wf::view_2D(node->view), view_node(node) {
+    : wf::scene::view_2d_transformer_t(node->view), view_node(node) {
     view->connect(&on_geometry_changed);
 }
 
