@@ -21,10 +21,12 @@ using WorkspaceRef = nonstd::observer_ptr<Workspace>;
 /// NAME: swf-init
 /// ON: output
 /// WHEN: After swayfire is initialized.
+struct SwayfireInit {};
 
 /// NAME: swf-fini
 /// ON: output
 /// WHEN: Before swayfire is finalized.
+struct SwayfireFinish {};
 
 // ========================================================================== //
 // == Output Signals ==

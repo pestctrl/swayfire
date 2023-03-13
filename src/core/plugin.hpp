@@ -4,7 +4,8 @@
 #include <wayfire/nonstd/observer_ptr.h>
 #include <wayfire/object.hpp>
 #include <wayfire/output.hpp>
-#include <wayfire/plugin.hpp>
+#include <wayfire/per-output-plugin.hpp>
+#include "signals.hpp"
 
 class Swayfire;
 using SwayfireRef = nonstd::observer_ptr<Swayfire>;
@@ -16,18 +17,18 @@ struct SwayfireCustomData : public wf::custom_data_t {
 };
 
 /// Utilities for swayfire plugins loaded through swayfire.
-class SwayfirePlugin : public wf::plugin_interface_t {
+class SwayfirePlugin : public wf::per_output_plugin_instance_t {
   private:
     /// Whether swf_fini() was run yet.
     bool has_finished = false;
 
-    wf::signal_connection_t on_swayfire_init = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<SwayfireInit> on_swayfire_init = [&](SwayfireInit *) {
         swayfire =
             output->get_data<SwayfireCustomData>("swayfire-core")->swayfire;
         swf_init();
     };
 
-    wf::signal_connection_t on_swayfire_fini = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<SwayfireFinish> on_swayfire_fini = [&](SwayfireFinish *) {
         assert(!has_finished);
         output->disconnect_signal(&on_swayfire_init);
         output->disconnect_signal(&on_swayfire_fini);
@@ -51,9 +52,9 @@ class SwayfirePlugin : public wf::plugin_interface_t {
         if (output->get_data<SwayfireCustomData>("swayfire-core"))
             on_swayfire_init.emit(nullptr);
         else
-            output->connect_signal("swf-init", &on_swayfire_init);
+            output->connect(&on_swayfire_init);
 
-        output->connect_signal("swf-fini", &on_swayfire_fini);
+        output->connect(&on_swayfire_fini);
     }
     void fini() final {
         if (!has_finished)

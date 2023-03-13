@@ -1581,11 +1581,13 @@ void Swayfire::init() {
     output->store_data(std::make_unique<SwayfireCustomData>(this),
                        "swayfire-core");
 
-    output->emit_signal("swf-init", nullptr);
+    SwayfireInit sig;
+    output->emit(&sig);
 }
 
 void Swayfire::fini() {
-    output->emit_signal("swf-fini", nullptr);
+    SwayfireFinish sig;
+    output->emit(&sig);
 
     LOGD("==== fini ====");
 
