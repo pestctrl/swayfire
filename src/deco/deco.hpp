@@ -417,7 +417,7 @@ class SplitDecoration final : public wf::view_interface_t,
         on_child_removed_impl(data);
     };
 
-    wf::signal_connection_t on_split_type_changed = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<SplitTypeChangedSignal> on_split_type_changed = [&](SplitTypeChangedSignal *) {
         if (!node->is_stack() && is_visible())
             set_visible(false);
         else if (node->is_stack() && !is_visible())
@@ -440,12 +440,12 @@ class SplitDecoration final : public wf::view_interface_t,
             tab_surfaces.emplace_back();
 
         node->connect_signal("padding-changed", &on_padding_changed);
-        node->connect_signal("split-type-changed", &on_split_type_changed);
         node->connect(&on_geometry_changed);
         node->connect(&on_child_inserted);
         node->connect(&on_child_swapped);
         node->connect(&on_children_swapped);
         node->connect(&on_child_removed);
+        node->connect(&on_split_type_changed);
 
         const auto output = node->get_ws()->output;
         output->connect_signal("swf-deco-fini", &on_detached);
@@ -467,8 +467,8 @@ class SplitDecoration final : public wf::view_interface_t,
         output->disconnect_signal(&on_config_changed);
         output->disconnect_signal(&on_detached);
 
-        node->disconnect_signal(&on_split_type_changed);
         node->disconnect_signal(&on_padding_changed);
+        node->disconnect(&on_split_type_changed);
         node->disconnect(&on_child_removed);
         node->disconnect(&on_children_swapped);
         node->disconnect(&on_child_swapped);

@@ -128,6 +128,7 @@ struct ChildrenSwappedSignal {
 /// NAME: split-type-changed
 /// ON: SplitNode
 /// WHEN: When the split type of the node changes.
+struct SplitTypeChangedSignal {};
 
 /// Data passed on view-node signals emitted from swayfire
 struct ViewNodeSignalData {
