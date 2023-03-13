@@ -83,6 +83,7 @@ struct TitleChangedSignal {};
 /// NAME: padding-changed
 /// ON: INode
 /// WHEN: When the node's padding changes.
+struct PaddingChangedSignal {};
 
 // ========================================================================== //
 // == View Node Signals ==

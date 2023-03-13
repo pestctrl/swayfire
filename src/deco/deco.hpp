@@ -179,7 +179,7 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
     /// The loaded options from the cfg.
     nonstd::observer_ptr<Options> options;
 
-    wf::signal_connection_t on_padding_changed = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<PaddingChangedSignal> on_padding_changed = [&](PaddingChangedSignal *) {
         ::set_outer_corners(node, surface_ref->get_outer_corners());
     };
 
@@ -222,11 +222,11 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
     ViewDecoration(ViewNodeRef node, nonstd::observer_ptr<Options> options)
         : node(node), options(options) {
 
-        node->connect_signal("padding-changed", &on_padding_changed);
         node->connect_signal("prefered-split-type-changed",
                              &on_prefered_split_type_changed);
         node->connect_signal("detached", &on_detached);
         node->view->connect_signal("fullscreen", &on_fullscreen);
+        node->connect(&on_padding_changed);
 
         const auto output = node->get_ws()->output;
         output->connect_signal("swf-deco-fini", &on_detached);
@@ -256,7 +256,7 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
         node->view->disconnect_signal(&on_fullscreen);
         node->disconnect_signal(&on_detached);
         node->disconnect_signal(&on_prefered_split_type_changed);
-        node->disconnect_signal(&on_padding_changed);
+        node->disconnect(&on_padding_changed);
     }
 
     /// Is the decoration currently hidden.
@@ -378,7 +378,7 @@ class SplitDecoration final : public wf::view_interface_t,
         };
 
     bool enable_on_padding_changed = true;
-    wf::signal_connection_t on_padding_changed = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<PaddingChangedSignal> on_padding_changed = [&](PaddingChangedSignal *) {
         if (enable_on_padding_changed)
             ::set_outer_corners(node, outer_corners);
     };
@@ -439,8 +439,8 @@ class SplitDecoration final : public wf::view_interface_t,
         for (std::size_t i = 0; i < node->get_children_count(); i++)
             tab_surfaces.emplace_back();
 
-        node->connect_signal("padding-changed", &on_padding_changed);
         node->connect(&on_geometry_changed);
+        node->connect(&on_padding_changed);
         node->connect(&on_child_inserted);
         node->connect(&on_child_swapped);
         node->connect(&on_children_swapped);
@@ -467,12 +467,12 @@ class SplitDecoration final : public wf::view_interface_t,
         output->disconnect_signal(&on_config_changed);
         output->disconnect_signal(&on_detached);
 
-        node->disconnect_signal(&on_padding_changed);
         node->disconnect(&on_split_type_changed);
         node->disconnect(&on_child_removed);
         node->disconnect(&on_children_swapped);
         node->disconnect(&on_child_swapped);
         node->disconnect(&on_child_inserted);
+        node->disconnect(&on_padding_changed);
         node->disconnect(&on_geometry_changed);
     }
 
