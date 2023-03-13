@@ -111,6 +111,7 @@ struct SplitDecorationData : public wf::custom_data_t {
         : deco(deco) {}
 };
 
+// TODO(pestctrl): Great, more missing classes.
 class DecorationSurface final : public wf::compositor_surface_t,
                                 public wf::surface_interface_t {
   private:

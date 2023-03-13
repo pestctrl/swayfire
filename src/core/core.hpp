@@ -409,6 +409,7 @@ class INode : public virtual IDisplay, public wf::object_base_t, public wf::sign
     };
 
     /// Set the sublayer of views in the subtree starting at this node.
+    // TODO(pestctrl): wf::sublayer_t is gone?
     virtual void set_sublayer(nonstd::observer_ptr<wf::sublayer_t> sublayer);
 
     /// Bring this node's whole tree to the foreground.
@@ -456,6 +457,7 @@ class INode : public virtual IDisplay, public wf::object_base_t, public wf::sign
 ///
 /// Currently waiting on https://github.com/WayfireWM/wayfire/issues/995 which
 /// is planned for wayfire 0.9.
+// TODO(pestctrl): view_2D is gone
 class ViewGeoEnforcer final : public wf::view_2D {
   private:
     ViewNodeRef view_node;
