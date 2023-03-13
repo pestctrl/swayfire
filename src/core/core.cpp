@@ -1536,12 +1536,12 @@ void Swayfire::correct_view_workspace(ViewNodeRef node,
 }
 
 void Swayfire::bind_signals() {
-    output->connect_signal("view-focused", &on_view_focused);
+    output->connect(&on_view_focused);
     output->connect_signal("view-fullscreen-request",
                            &on_view_fullscreen_request);
     output->connect_signal("view-tile-request", &on_view_tile_request);
     output->connect(&on_view_attached);
-    output->connect_signal("view-minimize-request", &on_view_minimized);
+    output->connect(&on_view_minimized);
     output->connect_signal("view-change-workspace", &on_view_change_workspace);
     output->connect_signal("workspace-changed", &on_workspace_changed);
 }
@@ -1549,11 +1549,11 @@ void Swayfire::bind_signals() {
 void Swayfire::unbind_signals() {
     output->disconnect_signal(&on_workspace_changed);
     output->disconnect_signal(&on_view_change_workspace);
-    output->disconnect_signal(&on_view_minimized);
+    output->disconnect(&on_view_minimized);
     output->disconnect(&on_view_attached);
     output->disconnect_signal(&on_view_tile_request);
     output->disconnect_signal(&on_view_fullscreen_request);
-    output->disconnect_signal(&on_view_focused);
+    output->disconnect(&on_view_focused);
 }
 
 void Swayfire::init() {

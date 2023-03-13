@@ -611,13 +611,6 @@ inline ViewNodeRef get_view_node(wayfire_view view) {
     return nullptr;
 }
 
-/// Get the signaled view node.
-///
-/// \return The ViewNode of the signaled view or nullptr.
-inline ViewNodeRef get_signaled_view_node(wf::signal_data_t *data) {
-    return get_view_node(wf::get_signaled_view(data));
-}
-
 /// A child of a split node.
 ///
 /// We try to use the size attribute of the children as much as possible in
@@ -1081,8 +1074,8 @@ class Swayfire final : public wf::per_output_plugin_instance_t {
     // == Signal Handlers == //
 
     /// Handle views being focused.
-    wf::signal_connection_t on_view_focused = [&](wf::signal_data_t *data) {
-        if (const auto node = get_signaled_view_node(data)) {
+    wf::signal::connection_t<ViewNodeSignalData> on_view_focused = [&](ViewNodeSignalData *data) {
+        if (const auto node = get_view_node(data->node)) {
             // A potential side-effect of removing a view in a
             // "A.insert_node(B.remove_node())" operation is that in between the
             // two operations, some node is destroyed (e.g. a split downgrade)
@@ -1163,16 +1156,17 @@ class Swayfire final : public wf::per_output_plugin_instance_t {
     };
 
     /// Handle (un)minimized views.
-    wf::signal_connection_t on_view_minimized = [&](wf::signal_data_t *data) {
-        auto minimizing =
-            dynamic_cast<wf::view_minimize_request_signal *>(data)->state;
+    wf::signal::connection_t<wf::view_minimize_request_signal> on_view_minimized = [&](wf::view_minimize_request_signal *data) {
+        auto minimizing = data->state;
         if (minimizing) {
-            if (auto vnode = get_signaled_view_node(data)) {
+            if (auto vnode = get_view_node(data->view)) {
                 (void)vnode->get_ws()->remove_node(vnode);
                 // view node dies here.
             }
         } else {
-            on_view_attached.emit(data);
+            wf::view_layer_attached_signal sig;
+            sig.view = data->view;
+            on_view_attached.emit(&sig);
         }
     };
 
