@@ -496,14 +496,20 @@ class ViewNode final : public INode {
     /// The prefered split type for upgrading this node to a split node.
     std::optional<SplitType> prefered_split_type = std::nullopt;
 
+    // TODO(pestctrl): These two signals, "mapped" and "unmapped", I'm
+    // not sure they are correct, because wf::view_mapped_signal
+    // carries a view as a parameter, but these callbacks don't touch
+    // it all. Seems a little suspicious, but I'm gonna let it go for
+    // now.
+
     /// Handle the view being mapped.
-    wf::signal_connection_t on_mapped = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<wf::view_mapped_signal> on_mapped = [&](wf::view_mapped_signal *) {
         if (view->tiled_edges != wf::TILED_EDGES_ALL)
             floating_geometry = expand_geometry(view->get_wm_geometry());
     };
 
     /// Handle unmapped views.
-    wf::signal_connection_t on_unmapped = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<wf::view_unmapped_signal> on_unmapped = [&](wf::view_unmapped_signal *) {
         // can't inline it here since depends on ws methods.
         on_unmapped_impl();
     };

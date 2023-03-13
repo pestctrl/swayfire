@@ -261,8 +261,8 @@ ViewNode::ViewNode(wayfire_view view) : view(view) {
     geometry = expand_geometry(view->get_wm_geometry());
     floating_geometry = geometry;
 
-    view->connect_signal("mapped", &on_mapped);
-    view->connect_signal("unmapped", &on_unmapped);
+    view->connect(&on_mapped);
+    view->connect(&on_unmapped);
     view->connect_signal("geometry-changed", &on_geometry_changed);
     view->connect(&on_title_changed);
 }
@@ -278,8 +278,8 @@ ViewNode::~ViewNode() {
 
     view->disconnect(&on_title_changed);
     view->disconnect_signal(&on_geometry_changed);
-    view->disconnect_signal(&on_unmapped);
-    view->disconnect_signal(&on_mapped);
+    view->disconnect(&on_unmapped);
+    view->disconnect(&on_mapped);
 
     view->pop_transformer(geo_enforcer);
 
