@@ -16,7 +16,7 @@
 #include <wayfire/signal-provider.hpp>
 #include <wayfire/option-wrapper.hpp>
 #include <wayfire/output.hpp>
-#include <wayfire/plugin.hpp>
+#include <wayfire/per-output-plugin.hpp>
 #include <wayfire/signal-definitions.hpp>
 #include <wayfire/util/log.hpp>
 #include <wayfire/view-transform.hpp>
@@ -995,7 +995,7 @@ class IActiveButtonDrag;
 class ActiveMove;
 class ActiveResize;
 
-class Swayfire final : public wf::plugin_interface_t {
+class Swayfire final : public wf::per_output_plugin_instance_t {
   public:
     /// The workspaces manages by swayfire.
     Workspaces workspaces;
