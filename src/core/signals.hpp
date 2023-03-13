@@ -151,7 +151,10 @@ struct NodeSignalData {
 };
 
 // NAME: detached
-struct DetachedSignalData {};
+struct DetachedSignalData {
+  // Potentially unused?
+  Node _node;
+};
 
 // NAME: swf-deco-fini
 struct DecoratorFinishSignal {};
