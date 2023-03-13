@@ -257,7 +257,7 @@ wf::region_t SplitDecoration::calculate_region() const {
 }
 
 void SplitDecoration::on_child_inserted_impl(NodeSignalData *data) {
-    data->node->connect_signal("title-changed", &on_title_changed);
+    data->node->connect(&on_title_changed);
 
     tab_surfaces.emplace_back();
 
@@ -275,7 +275,7 @@ void SplitDecoration::on_child_inserted_impl(NodeSignalData *data) {
 }
 
 void SplitDecoration::on_child_removed_impl(NodeSignalData *data) {
-    data->node->disconnect_signal(&on_title_changed);
+    data->node->disconnect(&on_title_changed);
 
     if (node_state.is_child_active) {
         on_set_child_active(false);

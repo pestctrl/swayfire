@@ -76,7 +76,8 @@ void INode::close_subsurfaces() {
 }
 
 void INode::emit_title_changed() {
-    emit_signal("title-changed", nullptr);
+    TitleChangedSignal sig;
+    emit(&sig);
     parent->notify_child_title_changed(this);
 }
 
@@ -262,7 +263,7 @@ ViewNode::ViewNode(wayfire_view view) : view(view) {
     view->connect_signal("mapped", &on_mapped);
     view->connect_signal("unmapped", &on_unmapped);
     view->connect_signal("geometry-changed", &on_geometry_changed);
-    view->connect_signal("title-changed", &on_title_changed);
+    view->connect(&on_title_changed);
 }
 
 ViewNode::~ViewNode() {
@@ -274,7 +275,7 @@ ViewNode::~ViewNode() {
 
     close_subsurfaces();
 
-    view->disconnect_signal(&on_title_changed);
+    view->disconnect(&on_title_changed);
     view->disconnect_signal(&on_geometry_changed);
     view->disconnect_signal(&on_unmapped);
     view->disconnect_signal(&on_mapped);

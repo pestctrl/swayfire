@@ -508,7 +508,7 @@ class ViewNode final : public INode {
     };
 
     /// Handle title changes.
-    wf::signal_connection_t on_title_changed = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<TitleChangedSignal> on_title_changed = [&](TitleChangedSignal *) {
         emit_title_changed();
     };
 

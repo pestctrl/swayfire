@@ -78,6 +78,7 @@ struct GeometryChangedSignalData {
 /// NAME: title-changed
 /// ON: INode
 /// WHEN: When the node's title is updated.
+struct TitleChangedSignal {};
 
 /// NAME: padding-changed
 /// ON: INode
