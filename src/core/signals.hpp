@@ -122,6 +122,8 @@ struct ChildSwappedSignalData {
 /// NAME: children-swapped
 /// ON: SplitNode
 /// WHEN: When two of the node's children are swapped.
+struct ChildrenSwappedSignal {
+};
 
 /// NAME: split-type-changed
 /// ON: SplitNode

@@ -674,7 +674,8 @@ void SplitNode::swap_children(Node a, Node b) {
 
     std::iter_swap(child_a, child_b);
 
-    emit_signal("children-swapped", nullptr);
+    ChildrenSwappedSignal sig;
+    emit(&sig);
     emit_title_changed();
 
     refresh_geometry();
