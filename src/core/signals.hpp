@@ -34,14 +34,14 @@ struct SwayfireFinish {};
 /// NAME: swf-active-node-changed
 /// ON: output
 /// WHEN: When a workspace on the output's active node changes.
-struct ActiveNodeChangedSignalData : wf::signal_data_t {
+struct ActiveNodeChangedSignalData {
     Node old_node, new_node;
 };
 
 /// NAME: swf-root-node-changed
 /// ON: output
 /// WHEN: When one of a workspace on the output's root nodes changes.
-struct RootNodeChangedSignalData : wf::signal_data_t {
+struct RootNodeChangedSignalData {
     WorkspaceRef workspace;
     bool floating;
 
@@ -71,7 +71,7 @@ struct RootNodeChangedSignalData : wf::signal_data_t {
 /// ON: INode
 /// WHEN: When the node's geometry is set.
 
-struct GeometryChangedSignalData : wf::signal_data_t {
+struct GeometryChangedSignalData {
     wf::geometry_t old_geo, new_geo;
 };
 
@@ -105,7 +105,7 @@ struct GeometryChangedSignalData : wf::signal_data_t {
 /// ON: SplitNode
 /// WHEN: When a child of the node is swapped for another node.
 
-struct ChildSwappedSignalData : wf::signal_data_t {
+struct ChildSwappedSignalData {
     Node old_node; ///< The swapped-out node.
     Node new_node; ///< The swapped-in node.
 };
@@ -119,19 +119,19 @@ struct ChildSwappedSignalData : wf::signal_data_t {
 /// WHEN: When the split type of the node changes.
 
 /// Data passed on view-node signals emitted from swayfire
-struct ViewNodeSignalData : wf::signal_data_t {
+struct ViewNodeSignalData {
     /// The node that triggered the signal
     ViewNodeRef node;
 };
 
 /// Data passed on split-node signals emitted from swayfire
-struct SplitNodeSignalData : wf::signal_data_t {
+struct SplitNodeSignalData {
     /// The node that triggered the signal
     SplitNodeRef node;
 };
 
 /// Data passed on node signals emitted from swayfire
-struct NodeSignalData : wf::signal_data_t {
+struct NodeSignalData {
     /// The node that triggered the signal
     Node node;
 };
