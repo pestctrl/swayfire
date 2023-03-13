@@ -209,7 +209,7 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
         on_detached_impl();
     };
 
-    wf::signal_connection_t on_fullscreen = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<wf::view_fullscreen_signal> on_fullscreen = [&](wf::view_fullscreen_signal *) {
         if (node->view->fullscreen) {
             if (!is_hidden())
                 detach_surface();
@@ -230,10 +230,10 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
     ViewDecoration(ViewNodeRef node, nonstd::observer_ptr<Options> options)
         : node(node), options(options) {
 
-        node->view->connect_signal("fullscreen", &on_fullscreen);
         node->connect(&on_padding_changed);
         node->connect(&on_prefered_split_type_changed);
         node->connect(&on_detached);
+        node->view->connect(&on_fullscreen);
 
         const auto output = node->get_ws()->output;
         output->connect(&on_swf_fini);
@@ -260,7 +260,7 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
         output->disconnect(&on_config_changed);
         output->disconnect(&on_detached);
 
-        node->view->disconnect_signal(&on_fullscreen);
+        node->view->disconnect(&on_fullscreen);
         node->disconnect(&on_detached);
         node->disconnect(&on_prefered_split_type_changed);
         node->disconnect(&on_padding_changed);
