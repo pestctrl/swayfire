@@ -370,7 +370,8 @@ std::optional<SplitType> ViewNode::get_prefered_split_type() {
 
 void ViewNode::set_prefered_split_type(std::optional<SplitType> split_type) {
     if (split_type != prefered_split_type) {
-        emit_signal("prefered-split-type-changed", nullptr);
+        PreferredSplitSignal sig = {};
+        emit(&sig);
         prefered_split_type = split_type;
     }
 }
@@ -1048,7 +1049,7 @@ void Workspace::set_active_node(Node node) {
     ActiveNodeChangedSignalData data;
     data.old_node = old_node;
     data.new_node = active_node;
-    output->emit_signal("swf-active-node-changed", &data);
+    output->emit(&data);
 
     if (!node)
         return;
@@ -1078,7 +1079,7 @@ void Workspace::insert_floating_node(OwnedNode node) {
     data.floating = true;
     data.old_root = nullptr;
     data.new_root = node_ref;
-    output->emit_signal("swf-root-node-changed", &data);
+    output->emit(&data);
 }
 
 Workspace::FloatingNodeIter Workspace::find_floating(Node node) {
@@ -1133,7 +1134,7 @@ OwnedNode Workspace::swap_floating_node(Node node, OwnedNode other) {
     data.floating = true;
     data.old_root = other;
     data.new_root = child->node;
-    output->emit_signal("swf-root-node-changed", &data);
+    output->emit(&data);
 
     return other;
 }
@@ -1161,7 +1162,7 @@ Workspace::swap_tiled_root(std::unique_ptr<SplitNode> other) {
     data.floating = false;
     data.old_root = ret;
     data.new_root = tiled_root.node;
-    output->emit_signal("swf-root-node-changed", &data);
+    output->emit(&data);
 
     return ret;
 }

@@ -91,6 +91,7 @@ struct PaddingChangedSignal {};
 /// NAME: prefered-split-type-changed
 /// ON: ViewNode
 /// WHEN: When the view node's prefered_split_type changes.
+struct PreferredSplitSignal {};
 
 // ========================================================================== //
 // == Split Node Signals ==

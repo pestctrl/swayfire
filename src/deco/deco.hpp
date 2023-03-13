@@ -183,8 +183,8 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
         ::set_outer_corners(node, surface_ref->get_outer_corners());
     };
 
-    wf::signal_connection_t on_prefered_split_type_changed =
-        [&](wf::signal_data_t *) { damage(); };
+    wf::signal::connection_t<PreferredSplitSignal> on_prefered_split_type_changed =
+        [&](PreferredSplitSignal *) { damage(); };
 
     wf::signal::connection_t<ConfigChangedSignal> on_config_changed = [&](ConfigChangedSignal *) {
         // Refresh geometry in case border_width changes.
@@ -230,10 +230,9 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
     ViewDecoration(ViewNodeRef node, nonstd::observer_ptr<Options> options)
         : node(node), options(options) {
 
-        node->connect_signal("prefered-split-type-changed",
-                             &on_prefered_split_type_changed);
         node->view->connect_signal("fullscreen", &on_fullscreen);
         node->connect(&on_padding_changed);
+        node->connect(&on_prefered_split_type_changed);
         node->connect(&on_detached);
 
         const auto output = node->get_ws()->output;
@@ -262,8 +261,8 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
         output->disconnect(&on_detached);
 
         node->view->disconnect_signal(&on_fullscreen);
-        node->disconnect_signal(&on_prefered_split_type_changed);
         node->disconnect(&on_detached);
+        node->disconnect(&on_prefered_split_type_changed);
         node->disconnect(&on_padding_changed);
     }
 
@@ -532,11 +531,8 @@ class SwayfireDeco final : public SwayfirePlugin {
             decorate_node(data->node);
         };
 
-    wf::signal_connection_t on_active_node_changed =
-        [&](wf::signal_data_t *data_) {
-            const auto data =
-                dynamic_cast<ActiveNodeChangedSignalData *>(data_);
-
+    wf::signal::connection_t<ActiveNodeChangedSignalData> on_active_node_changed =
+        [&](ActiveNodeChangedSignalData *data) {
             /// Notify the relevant tiling subtree that the node has been made
             /// active/inactive.
             const auto notify_tree = [](Node n, bool active) {
@@ -564,10 +560,9 @@ class SwayfireDeco final : public SwayfirePlugin {
         };
 
     void on_root_node_changed_impl(RootNodeChangedSignalData *data);
-    wf::signal_connection_t on_root_node_changed =
-        [&](wf::signal_data_t *data_) {
-            const auto data = dynamic_cast<RootNodeChangedSignalData *>(data_);
-            on_root_node_changed_impl(data);
+    wf::signal::connection_t<RootNodeChangedSignalData> on_root_node_changed =
+        [&](RootNodeChangedSignalData *d) {
+            on_root_node_changed_impl(d);
         };
 
     Options options{};

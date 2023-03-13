@@ -541,8 +541,8 @@ void SwayfireDeco::swf_init() {
 
     output->connect_signal("swf-view-node-attached", &on_view_node_attached);
     output->connect_signal("swf-split-node-attached", &on_split_node_created);
-    output->connect_signal("swf-active-node-changed", &on_active_node_changed);
-    output->connect_signal("swf-root-node-changed", &on_root_node_changed);
+    output->connect(&on_active_node_changed);
+    output->connect(&on_root_node_changed);
 
     options.set_callback( [&] {
       ConfigChangedSignal sig = {};
@@ -552,12 +552,12 @@ void SwayfireDeco::swf_init() {
 
 void SwayfireDeco::swf_fini() {
     LOGD("=== deco fini ===");
-    output->disconnect_signal(&on_root_node_changed);
-    output->disconnect_signal(&on_active_node_changed);
     output->disconnect_signal(&on_split_node_created);
     output->disconnect_signal(&on_view_node_attached);
     DecoratorFinishSignal sig = {};
     output->emit(&sig);
+    output->disconnect(&on_root_node_changed);
+    output->disconnect(&on_active_node_changed);
 
     subsurf_gl_fini();
 }
