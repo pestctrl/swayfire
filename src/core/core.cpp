@@ -198,11 +198,11 @@ Node INode::find_floating_parent() {
 
 ViewGeoEnforcer::ViewGeoEnforcer(ViewNodeRef node)
     : wf::view_2D(node->view), view_node(node) {
-    view->connect_signal("geometry-changed", &on_geometry_changed);
+    view->connect(&on_geometry_changed);
 }
 
 ViewGeoEnforcer::~ViewGeoEnforcer() {
-    view->disconnect_signal(&on_geometry_changed);
+    view->disconnect(&on_geometry_changed);
 }
 
 void ViewGeoEnforcer::ref_disable() { disabled++; }
@@ -263,7 +263,7 @@ ViewNode::ViewNode(wayfire_view view) : view(view) {
 
     view->connect(&on_mapped);
     view->connect(&on_unmapped);
-    view->connect_signal("geometry-changed", &on_geometry_changed);
+    view->connect(&on_geometry_changed);
     view->connect(&on_title_changed);
 }
 
@@ -277,7 +277,7 @@ ViewNode::~ViewNode() {
     close_subsurfaces();
 
     view->disconnect(&on_title_changed);
-    view->disconnect_signal(&on_geometry_changed);
+    view->disconnect(&on_geometry_changed);
     view->disconnect(&on_unmapped);
     view->disconnect(&on_mapped);
 
