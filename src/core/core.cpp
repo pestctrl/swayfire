@@ -491,9 +491,9 @@ void SplitNode::insert_child_at(SplitChildIter at, OwnedNode node) {
     if (is_split())
         sync_sizes_to_ratios();
 
-    NodeSignalData data;
+    ChildInsertedSignal data;
     data.node = node_ref;
-    emit_signal("child-inserted", &data);
+    emit(&data);
     emit_title_changed();
 
     refresh_geometry();
@@ -569,9 +569,9 @@ OwnedNode SplitNode::remove_child_at(SplitChildIter child) {
             sync_sizes_to_ratios();
     }
 
-    NodeSignalData data;
+    ChildRemovedSignal data;
     data.node = owned_node.get();
-    emit_signal("child-removed", &data);
+    emit(&data);
     emit_title_changed();
 
     refresh_geometry();
@@ -657,7 +657,7 @@ OwnedNode SplitNode::swap_child(Node node, OwnedNode other) {
     ChildSwappedSignalData data;
     data.old_node = other.get();
     data.new_node = child->node.get();
-    emit_signal("child-swapped", &data);
+    emit(&data);
     emit_title_changed();
 
     return other;

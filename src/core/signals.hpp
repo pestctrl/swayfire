@@ -97,10 +97,18 @@ struct TitleChangedSignal {};
 /// NAME: child-inserted
 /// ON: SplitNode
 /// WHEN: When a new child is inserted into the node.
+struct ChildInsertedSignal {
+    /// The node that triggered the signal
+    Node node;
+};
 
 /// NAME: child-removed
 /// ON: SplitNode
 /// WHEN: When a child is removed from the node.
+struct ChildRemovedSignal {
+    /// The node that triggered the signal
+    Node node;
+};
 
 /// NAME: child-swapped
 /// ON: SplitNode

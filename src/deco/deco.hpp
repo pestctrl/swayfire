@@ -390,14 +390,12 @@ class SplitDecoration final : public wf::view_interface_t,
         cache_textures();
     };
 
-    void on_child_inserted_impl(NodeSignalData *data);
-    wf::signal_connection_t on_child_inserted = [&](wf::signal_data_t *data) {
-        on_child_inserted_impl(dynamic_cast<NodeSignalData *>(data));
+    void on_child_inserted_impl(ChildInsertedSignal *data);
+    wf::signal::connection_t<ChildInsertedSignal> on_child_inserted = [&](ChildInsertedSignal *data) {
+        on_child_inserted_impl(data);
     };
 
-    wf::signal_connection_t on_child_swapped = [&](wf::signal_data_t *data_) {
-        const auto data = dynamic_cast<ChildSwappedSignalData *>(data_);
-
+    wf::signal::connection_t<ChildSwappedSignalData> on_child_swapped = [&](ChildSwappedSignalData *data) {
         data->old_node->disconnect(&on_title_changed);
         data->new_node->connect(&on_title_changed);
 
@@ -417,9 +415,9 @@ class SplitDecoration final : public wf::view_interface_t,
         ::set_outer_corners(node, outer_corners);
     };
 
-    void on_child_removed_impl(NodeSignalData *data);
-    wf::signal_connection_t on_child_removed = [&](wf::signal_data_t *data) {
-        on_child_removed_impl(dynamic_cast<NodeSignalData *>(data));
+    void on_child_removed_impl(ChildRemovedSignal *data);
+    wf::signal::connection_t<ChildRemovedSignal> on_child_removed = [&](ChildRemovedSignal *data) {
+        on_child_removed_impl(data);
     };
 
     wf::signal_connection_t on_split_type_changed = [&](wf::signal_data_t *) {
@@ -446,11 +444,11 @@ class SplitDecoration final : public wf::view_interface_t,
 
         node->connect_signal("geometry-changed", &on_geometry_changed);
         node->connect_signal("padding-changed", &on_padding_changed);
-        node->connect_signal("child-inserted", &on_child_inserted);
-        node->connect_signal("child-swapped", &on_child_swapped);
         node->connect_signal("children-swapped", &on_children_swapped);
-        node->connect_signal("child-removed", &on_child_removed);
         node->connect_signal("split-type-changed", &on_split_type_changed);
+        node->connect(&on_child_inserted);
+        node->connect(&on_child_swapped);
+        node->connect(&on_child_removed);
 
         const auto output = node->get_ws()->output;
         output->connect_signal("swf-deco-fini", &on_detached);
@@ -473,12 +471,12 @@ class SplitDecoration final : public wf::view_interface_t,
         output->disconnect_signal(&on_detached);
 
         node->disconnect_signal(&on_split_type_changed);
-        node->disconnect_signal(&on_child_removed);
         node->disconnect_signal(&on_children_swapped);
-        node->disconnect_signal(&on_child_swapped);
-        node->disconnect_signal(&on_child_inserted);
         node->disconnect_signal(&on_padding_changed);
         node->disconnect_signal(&on_geometry_changed);
+        node->disconnect(&on_child_removed);
+        node->disconnect(&on_child_swapped);
+        node->disconnect(&on_child_inserted);
     }
 
     [[nodiscard]] Padding get_current_padding() const {
