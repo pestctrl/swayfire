@@ -1610,4 +1610,4 @@ void Swayfire::fini() {
 
 Swayfire::~Swayfire() = default;
 
-DECLARE_WAYFIRE_PLUGIN(Swayfire)
+DECLARE_WAYFIRE_PLUGIN(wf::per_output_plugin_t<Swayfire>)

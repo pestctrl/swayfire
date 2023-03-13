@@ -562,4 +562,4 @@ void SwayfireDeco::swf_fini() {
     subsurf_gl_fini();
 }
 
-DECLARE_WAYFIRE_PLUGIN(SwayfireDeco)
+DECLARE_WAYFIRE_PLUGIN(wf::per_output_plugin_t<SwayfireDeco>)
