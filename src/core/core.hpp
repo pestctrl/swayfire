@@ -614,12 +614,6 @@ inline ViewNodeRef get_signaled_view_node(wf::signal_data_t *data) {
     return get_view_node(wf::get_signaled_view(data));
 }
 
-inline SplitNodeRef get_signaled_split_node(wf::signal_data_t *data) {
-    auto ndata = dynamic_cast<SplitNodeSignalData *>(data);
-    assert(ndata);
-    return ndata->node;
-}
-
 /// A child of a split node.
 ///
 /// We try to use the size attribute of the children as much as possible in

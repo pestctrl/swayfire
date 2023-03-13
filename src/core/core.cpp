@@ -604,7 +604,8 @@ void SplitNode::set_split_type(SplitType st) {
         was_vsplit = split_type == SplitType::VSPLIT;
     split_type = st;
     refresh_geometry();
-    emit_signal("split-type-changed", nullptr);
+    SplitTypeChangedSignal sig;
+    emit(&sig);
     emit_title_changed();
 }
 

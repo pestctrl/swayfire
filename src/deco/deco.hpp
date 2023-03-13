@@ -527,10 +527,9 @@ class SwayfireDeco final : public SwayfirePlugin {
             decorate_node(vnode);
         };
 
-    wf::signal_connection_t on_split_node_created =
-        [&](wf::signal_data_t *data) {
-            auto vnode = get_signaled_split_node(data);
-            decorate_node(vnode);
+	wf::signal::connection_t<SplitNodeSignalData> on_split_node_created =
+        [&](SplitNodeSignalData *data) {
+            decorate_node(data->node);
         };
 
     wf::signal_connection_t on_active_node_changed =
