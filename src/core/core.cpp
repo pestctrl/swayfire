@@ -272,6 +272,8 @@ ViewNode::~ViewNode() {
     DetachedSignalData data = {};
     data.node = this;
     emit_signal(&data);
+    // TODO(pestctrl): cleanup remaining emit_signal, connect_signal,
+    // disconnect_signal
     get_ws()->output->emit_signal("swf-view-node-detached", &data);
 
     close_subsurfaces();
