@@ -111,7 +111,8 @@ struct SplitDecorationData : public wf::custom_data_t {
         : deco(deco) {}
 };
 
-// TODO(pestctrl): Great, more missing classes.
+// TODO(pestctrl): Great, more missing classes:
+// wf::compositor_surface_t and wf::surface_interface_t
 class DecorationSurface final : public wf::compositor_surface_t,
                                 public wf::surface_interface_t {
   private:
@@ -284,6 +285,8 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
     */
 };
 
+// TODO(pestctrl): wf::compositor_surface_t is gone. It appears to be
+// split up into two things: wf::touch_interaction_t and wf::pointer_interaction_t.
 class SplitDecoration final : public wf::view_interface_t,
                               public wf::compositor_surface_t {
   private:
@@ -501,6 +504,10 @@ class SplitDecoration final : public wf::view_interface_t,
     /// active node.
     void on_set_child_active(bool active);
 
+    // TODO(pestctrl): wf::view_interface_t (still exists) used to
+    // inherit from wf::surface_interface_t, but now
+    // wf::surface_interface_t, so most likely the input stuff will
+    // need to be rewritten.
     // == Impl wf::surface_interface_t ==
     bool is_mapped() const override;
     wf::dimensions_t get_size() const override;
