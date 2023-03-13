@@ -544,17 +544,20 @@ void SwayfireDeco::swf_init() {
     output->connect_signal("swf-active-node-changed", &on_active_node_changed);
     output->connect_signal("swf-root-node-changed", &on_root_node_changed);
 
-    options.set_callback(
-        [&] { output->emit_signal("swf-deco-config-changed", nullptr); });
+    options.set_callback( [&] {
+      ConfigChangedSignal sig = {};
+      output->emit(&sig);
+    });
 }
 
 void SwayfireDeco::swf_fini() {
     LOGD("=== deco fini ===");
-    output->emit_signal("swf-deco-fini", nullptr);
     output->disconnect_signal(&on_root_node_changed);
     output->disconnect_signal(&on_active_node_changed);
     output->disconnect_signal(&on_split_node_created);
     output->disconnect_signal(&on_view_node_attached);
+    DecoratorFinishSignal sig = {};
+    output->emit(&sig);
 
     subsurf_gl_fini();
 }

@@ -149,4 +149,13 @@ struct NodeSignalData {
     Node node;
 };
 
+// NAME: detached
+struct DetachedSignalData {};
+
+// NAME: swf-deco-fini
+struct DecoratorFinishSignal {};
+
+// NAME: swf-deco-config-changed
+struct ConfigChangedSignal {};
+
 #endif // ifndef SWAYFIRE_SIGNALS_HPP

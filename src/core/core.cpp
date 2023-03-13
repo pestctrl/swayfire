@@ -269,9 +269,9 @@ ViewNode::ViewNode(wayfire_view view) : view(view) {
 
 ViewNode::~ViewNode() {
     LOGD("Destroying ", this);
-    ViewNodeSignalData data = {};
+    DetachedSignalData data = {};
     data.node = this;
-    emit_signal("detached", &data);
+    emit_signal(&data);
     get_ws()->output->emit_signal("swf-view-node-detached", &data);
 
     close_subsurfaces();

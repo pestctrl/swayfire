@@ -186,19 +186,27 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
     wf::signal_connection_t on_prefered_split_type_changed =
         [&](wf::signal_data_t *) { damage(); };
 
-    wf::signal_connection_t on_config_changed = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<ConfigChangedSignal> on_config_changed = [&](ConfigChangedSignal *) {
         // Refresh geometry in case border_width changes.
         node->refresh_geometry();
         surface_ref->recalculate_region();
         node->view->damage();
     };
 
-    wf::signal_connection_t on_detached = [&](wf::signal_data_t *) {
+    void on_detached_impl() {
         // Save the current node in case cleaning the data triggers a
         // destruction of the current decoration. Avoid crashing when trying to
         // access to the node.
         auto vnode = node;
         vnode->view->set_decoration(nullptr); // ViewDecoration dies here.
+    }
+
+    wf::signal::connection_t<DetachedSignalData> on_detached = [&](DetachedSignalData *) {
+        on_detached_impl();
+    };
+
+    wf::signal::connection_t<DecoratorFinishSignal> on_swf_fini = [&](DecoratorFinishSignal *) {
+        on_detached_impl();
     };
 
     wf::signal_connection_t on_fullscreen = [&](wf::signal_data_t *) {
@@ -224,13 +232,13 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
 
         node->connect_signal("prefered-split-type-changed",
                              &on_prefered_split_type_changed);
-        node->connect_signal("detached", &on_detached);
         node->view->connect_signal("fullscreen", &on_fullscreen);
         node->connect(&on_padding_changed);
+        node->connect(&on_detached);
 
         const auto output = node->get_ws()->output;
-        output->connect_signal("swf-deco-fini", &on_detached);
-        output->connect_signal("swf-deco-config-changed", &on_config_changed);
+        output->connect(&on_swf_fini);
+        output->connect(&on_config_changed);
 
         auto surface_unique_ptr =
             std::make_unique<DecorationSurface>(node, options);
@@ -250,12 +258,12 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
         surface_ref->unmap();
 
         const auto output = node->get_ws()->output;
-        output->disconnect_signal(&on_config_changed);
-        output->disconnect_signal(&on_detached);
+        output->disconnect(&on_config_changed);
+        output->disconnect(&on_detached);
 
         node->view->disconnect_signal(&on_fullscreen);
-        node->disconnect_signal(&on_detached);
         node->disconnect_signal(&on_prefered_split_type_changed);
+        node->disconnect(&on_detached);
         node->disconnect(&on_padding_changed);
     }
 
@@ -334,7 +342,7 @@ class SplitDecoration final : public wf::view_interface_t,
     /// allocated in padding on the swayfire node.
     void refresh_size();
 
-    wf::signal_connection_t on_config_changed = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<ConfigChangedSignal> on_config_changed = [&](ConfigChangedSignal *) {
         // Refresh geometry in case border_width changes.
         node->refresh_geometry();
 
@@ -428,7 +436,7 @@ class SplitDecoration final : public wf::view_interface_t,
         ::set_outer_corners(node, outer_corners);
     };
 
-    wf::signal_connection_t on_detached = [&](wf::signal_data_t *) {
+    wf::signal::connection_t<DetachedSignalData> on_detached = [&](DetachedSignalData *) {
         node->remove_subsurface(this);
         close(); // SplitDecoration dies here.
     };
@@ -448,8 +456,8 @@ class SplitDecoration final : public wf::view_interface_t,
         node->connect(&on_split_type_changed);
 
         const auto output = node->get_ws()->output;
-        output->connect_signal("swf-deco-fini", &on_detached);
-        output->connect_signal("swf-deco-config-changed", &on_config_changed);
+        output->connect(&on_detached);
+        output->connect(&on_config_changed);
 
         node->store_data(std::make_unique<SplitDecorationData>(this));
     }
@@ -464,8 +472,8 @@ class SplitDecoration final : public wf::view_interface_t,
         }
 
         const auto output = node->get_ws()->output;
-        output->disconnect_signal(&on_config_changed);
-        output->disconnect_signal(&on_detached);
+        output->disconnect(&on_config_changed);
+        output->disconnect(&on_detached);
 
         node->disconnect(&on_split_type_changed);
         node->disconnect(&on_child_removed);
