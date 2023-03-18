@@ -112,8 +112,9 @@ struct SplitDecorationData : public wf::custom_data_t {
 };
 
 // TODO(pestctrl): Great, more missing classes:
-// wf::compositor_surface_t and wf::surface_interface_t
-class DecorationSurface final : public wf::compositor_surface_t,
+// wf::surface_interface_t
+class DecorationSurface final : public wf::touch_interaction_t,
+                                public wf::pointer_interaction_t,
                                 public wf::surface_interface_t {
   private:
     const ViewNodeRef node; ///< The node we're decorating.
@@ -285,10 +286,9 @@ class ViewDecoration final : public wf::decorator_frame_t_t {
     */
 };
 
-// TODO(pestctrl): wf::compositor_surface_t is gone. It appears to be
-// split up into two things: wf::touch_interaction_t and wf::pointer_interaction_t.
 class SplitDecoration final : public wf::view_interface_t,
-                              public wf::compositor_surface_t {
+                              public wf::touch_interaction_t,
+                              public wf::pointer_interaction_t {
   private:
     const SplitNodeRef node; ///< The node we're decorating.
 
