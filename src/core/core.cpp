@@ -1030,6 +1030,7 @@ Workspace::Workspace(wf::point_t wsid, wf::geometry_t geo,
                      nonstd::observer_ptr<Swayfire> plugin)
     : workarea(geo), wsid(wsid), plugin(plugin), output(plugin->output) {
 
+    // TODO(pestctrl): create_sublayer is no longer a part of workspace
     tiled_root.sublayer = output->workspace->create_sublayer(
         wf::LAYER_WORKSPACE, wf::SUBLAYER_FLOATING);
     (void)swap_tiled_root(std::make_unique<SplitNode>(geo));
