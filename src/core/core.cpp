@@ -259,9 +259,8 @@ void ViewGeoEnforcer::update_transformer() {
 // ViewNode
 
 ViewNode::ViewNode(wayfire_view view) : view(view) {
-    auto ge = std::make_unique<ViewGeoEnforcer>(this);
-    geo_enforcer = ge.get();
-    view->add_transformer(std::move(ge));
+    auto ge = std::make_shared<ViewGeoEnforcer>(this);
+    view->get_transformed_node()->add_transformer(ge, wf::TRANSFORMER_HIGHLEVEL - 1);
 
     geometry = expand_geometry(view->get_wm_geometry());
     floating_geometry = geometry;
@@ -287,7 +286,7 @@ ViewNode::~ViewNode() {
     view->disconnect(&on_unmapped);
     view->disconnect(&on_mapped);
 
-    view->pop_transformer(geo_enforcer);
+    view->get_transformed_node()->rem_transformer<ViewGeoEnforcer>();
 
     view->erase_data<ViewData>();
 }
